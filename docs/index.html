@@ -304,7 +304,7 @@
         <a class="btn btn-light" href="#install">Is it safe to install?</a>
       </div>
       <div class="proof">
-        <span class="dl-count"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg><b class="tnum" data-downloads>—</b>&nbsp;downloads</span>
+        <span class="dl-count"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg><b class="tnum" data-downloads>—</b>&nbsp;<span data-downloads-word>downloads</span></span>
         <span class="sep"></span><span><b data-version>Latest</b> version</span>
         <span class="sep"></span><span>Android 8.0+</span>
         <span class="sep"></span><span data-size>about 35 MB</span>
@@ -338,8 +338,8 @@
           </div>
         </div>
         <div class="tile tile-green reveal">
-          <p class="label">People who have downloaded StatusClear</p>
-          <div class="num tnum"><span data-downloads>—</span><span class="sym" style="color:var(--green-ink)">+</span></div>
+          <p class="label" data-downloads-label>Downloads so far, counted live from GitHub</p>
+          <div class="num tnum"><span data-downloads>—</span></div>
         </div>
         <div class="tile tile-soft reveal">
           <p class="label">Fewer pixels when WhatsApp re-encodes an over-limit Status</p>
@@ -573,7 +573,16 @@
       releases.forEach(function (rel) {
         (rel.assets || []).forEach(function (a) { if (/\.apk$/i.test(a.name)) total += a.download_count || 0; });
       });
-      setAll('[data-downloads]', fmt.format(total));
+      // GitHub counts file fetches, not people. While the count is 0, say
+      // "Just released" rather than showing a discouraging "0 downloads".
+      if (total > 0) {
+        setAll('[data-downloads]', fmt.format(total));
+        setAll('[data-downloads-word]', total === 1 ? 'download' : 'downloads');
+      } else {
+        setAll('[data-downloads]', 'New');
+        setAll('[data-downloads-word]', '· just released');
+        setAll('[data-downloads-label]', 'Just released. Be one of the first to download it');
+      }
       var latest = releases.filter(function (r) { return !r.draft && !r.prerelease; })[0] || releases[0];
       setAll('[data-version]', 'v' + String(latest.tag_name || '').replace(/^v/, ''));
       var arm = (latest.assets || []).filter(function (a) { return /arm64/.test(a.name); })[0];
