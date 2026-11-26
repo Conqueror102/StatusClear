@@ -4,7 +4,7 @@
 that prepares your videos and photos so WhatsApp Status doesn't crush them.
 
 [**⬇ Download the APK**](https://github.com/Conqueror102/StatusClear/releases/latest) ·
-[Website](https://conqueror102.github.io/StatusClear/) ·
+[Website](https://statusclear.hub2.workers.dev/) ·
 ⭐ Star the repo if it helps you
 
 <p>
