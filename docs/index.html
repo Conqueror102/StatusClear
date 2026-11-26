@@ -15,7 +15,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2325D366'/%3E%3Cpath d='M32 12l4.5 12.5L49 29l-12.5 4.5L32 46l-4.5-12.5L15 29l12.5-4.5z' fill='%2304210F'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #ffffff;
@@ -37,8 +37,8 @@
     --amber: #ffd166;
     --radius: 30px;
     --max: 1200px;
-    --display: "Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif;
-    --text: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --display: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --text: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -68,9 +68,9 @@
   .pill-rose { background: var(--rose); color: #fff; }
   .pill-white { background: #fff; color: var(--ink); border: 1px solid var(--line); }
 
-  h1, h2, h3 { font-family: var(--display); letter-spacing: -.035em; margin: 0; color: inherit; text-wrap: balance; }
-  h2 { font-size: clamp(34px, 4.6vw, 56px); line-height: 1.02; font-weight: 700; }
-  h3 { font-size: 22px; line-height: 1.2; font-weight: 600; letter-spacing: -.02em; }
+  h1, h2, h3 { font-family: var(--display); letter-spacing: -.04em; margin: 0; color: inherit; text-wrap: balance; }
+  h2 { font-size: clamp(34px, 4.6vw, 56px); line-height: 1.05; font-weight: 500; }
+  h3 { font-size: 22px; line-height: 1.2; font-weight: 500; letter-spacing: -.025em; }
   .lead { font-size: 19px; line-height: 1.55; color: var(--body); }
   .sec-head { display: grid; gap: 18px; justify-items: center; text-align: center; margin-bottom: 56px; }
   .sec-head .lead { max-width: 640px; margin: 0; }
@@ -78,7 +78,7 @@
   /* ---------- nav ---------- */
   .nav { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.82); backdrop-filter: saturate(1.4) blur(14px); }
   .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 76px; gap: 16px; }
-  .brand { display: flex; align-items: center; gap: 10px; font: 700 20px/1 var(--display); letter-spacing: -.02em; }
+  .brand { display: flex; align-items: center; gap: 10px; font: 600 20px/1 var(--display); letter-spacing: -.03em; }
   .logo { width: 34px; height: 34px; border-radius: 10px; background: var(--green); display: grid; place-items: center; flex: none; }
   .nav-links { display: flex; gap: 6px; }
   .nav-links a { padding: 8px 14px; border-radius: 999px; font-size: 15px; color: var(--body); }
@@ -89,7 +89,7 @@
   .hero-box { margin: 8px 30px 0; background: var(--soft); border-radius: var(--radius); padding: 96px 30px 0; overflow: clip; position: relative; }
   .hero-box::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(to right, var(--line) 1px, transparent 1px); background-size: calc(100% / 6) 100%; opacity: .55; pointer-events: none; mask-image: linear-gradient(to bottom, #000 30%, transparent 85%); }
   .hero { position: relative; display: grid; justify-items: center; text-align: center; gap: 26px; max-width: 980px; margin: 0 auto; }
-  .hero h1 { font-size: clamp(44px, 7.4vw, 96px); line-height: .98; font-weight: 800; letter-spacing: -.045em; }
+  .hero h1 { font-size: clamp(42px, 7vw, 92px); line-height: 1; font-weight: 500; letter-spacing: -.05em; }
   .hero h1 .word-pill { display: inline-block; background: var(--green); color: var(--green-ink); border-radius: 999px; padding: 0 .28em .08em; transform: rotate(-2deg); margin: 0 .04em; }
   .hero h1 .soft { color: var(--muted); }
   .hero .lead { max-width: 660px; margin: 0; line-height: 1.75; }
@@ -107,7 +107,7 @@
   .phone.p2 { z-index: 2; transform: translateY(0); width: 270px; }
   .phone.p3 { transform: rotate(7deg) translate(-36px, 70px); }
   .float { position: absolute; z-index: 3; background: #fff; border-radius: 18px; padding: 14px 16px; box-shadow: 0 18px 40px -12px rgba(11,15,14,.25); display: flex; align-items: center; gap: 12px; text-align: left; }
-  .float b { display: block; font: 700 22px/1 var(--display); letter-spacing: -.02em; }
+  .float b { display: block; font: 600 22px/1 var(--display); letter-spacing: -.02em; }
   .float span { font-size: 13px; color: var(--body); }
   .float .ic { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; flex: none; }
   .float.f1 { left: max(0px, calc(50% - 470px)); top: 70px; transform: rotate(-3deg); }
@@ -119,7 +119,7 @@
   .bento { display: grid; grid-template-columns: 1.25fr 1fr 1fr; grid-auto-rows: minmax(240px, auto); gap: 24px; }
   .tile { border-radius: var(--radius); padding: 30px; display: flex; flex-direction: column; justify-content: space-between; gap: 24px; position: relative; overflow: hidden; }
   .tile .label { font-size: 15px; color: var(--body); max-width: 260px; }
-  .num { font: 800 clamp(52px, 6vw, 84px)/.9 var(--display); letter-spacing: -.05em; }
+  .num { font: 500 clamp(52px, 6vw, 84px)/.9 var(--display); letter-spacing: -.05em; }
   .num .sym { color: var(--rose); }
   .tile-dark { background: var(--dark); color: var(--on-dark); grid-row: span 2; }
   .tile-dark .label { color: var(--on-dark-muted); }
@@ -156,14 +156,14 @@
   /* ---------- how it works ---------- */
   .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
   .step { background: var(--soft); border-radius: var(--radius); padding: 30px 30px 0; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
-  .step .n { font: 700 14px/1 var(--display); color: var(--green-ink); background: var(--green); width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; margin-bottom: 8px; }
+  .step .n { font: 600 14px/1 var(--display); color: var(--green-ink); background: var(--green); width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; margin-bottom: 8px; }
   .step p { margin: 0; color: var(--body); }
   .step .shot { margin-top: 26px; align-self: center; width: 78%; border-radius: 26px 26px 0 0; overflow: hidden; border: 6px solid #12161c; border-bottom: 0; box-shadow: 0 -10px 30px -12px rgba(11,15,14,.25); }
 
   /* ---------- the warning (bold) ---------- */
   .warn { margin: 0 30px; border-radius: var(--radius); background: var(--soft); padding: 110px 0; position: relative; overflow: hidden; }
   .warn-head { display: grid; grid-template-columns: 1.1fr .9fr; gap: 50px; align-items: end; margin-bottom: 60px; }
-  .warn-head h2 { font-size: clamp(38px, 4.8vw, 64px); line-height: .98; font-weight: 800; }
+  .warn-head h2 { font-size: clamp(38px, 4.8vw, 64px); line-height: 1.02; font-weight: 500; }
   .warn-head h2 .hl { background: var(--amber); border-radius: 14px; padding: 0 .16em .04em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
   .warn-head .lead { margin: 0; }
   .warn-head .lead b { color: var(--ink); }
@@ -204,14 +204,14 @@
   .cta::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(to right, var(--dark-line) 1px, transparent 1px); background-size: calc(100% / 6) 100%; pointer-events: none; }
   .cta .wrap { position: relative; }
   .cta-main { display: grid; justify-items: center; text-align: center; gap: 28px; }
-  .cta-main h2 { font-size: clamp(42px, 6.6vw, 88px); font-weight: 800; line-height: .98; }
+  .cta-main h2 { font-size: clamp(42px, 6.6vw, 88px); font-weight: 500; line-height: 1.02; }
   .cta-main h2 em { font-style: normal; color: var(--green); }
   .cta-main .lead { color: var(--on-dark-muted); margin: 0; max-width: 560px; }
   .cta-main .btn-green { transform: rotate(-2deg); }
   .cta-main .btn-green:hover { transform: rotate(-2deg) translateY(-1px); }
   .foot { margin-top: 110px; padding-top: 28px; border-top: 1px solid var(--dark-line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 18px; font-size: 14px; color: var(--on-dark-muted); }
   .foot a:hover { color: var(--on-dark); }
-  .foot-links { display: flex; flex-wrap: wrap; gap: 20px; }
+  .foot-links { display: flex; flex-wrap: wrap; align-items: center; align-self: flex-start; gap: 20px; flex: none; white-space: nowrap; }
   .disclaimer { font-size: 12.5px; max-width: 600px; margin-top: 14px; color: #6b7480; }
 
   /* ---------- motion ---------- */
@@ -283,7 +283,7 @@
     </nav>
     <div class="nav-actions">
       <a class="btn btn-dark btn-sm" href="https://github.com/Conqueror102/StatusClear" target="_blank" rel="noopener" aria-label="Star StatusClear on GitHub">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
         <span class="btn-dark-label">Star</span><span class="count tnum" data-stars>—</span>
       </a>
     </div>
@@ -294,7 +294,6 @@
   <!-- HERO -->
   <div class="hero-box">
     <div class="hero">
-      <span class="badge"><span class="dot"></span>Free · Open source · Android</span>
       <h1>Post a <span class="word-pill">sharp</span> Status,<br><span class="soft">not a blurry one.</span></h1>
       <p class="lead">WhatsApp crushes busy Statuses down to <span class="pill pill-rose">360×640</span>. StatusClear prepares yours so they post in <span class="pill pill-ink">1080×1920</span>, right on your phone.</p>
       <div class="hero-ctas">
@@ -506,18 +505,18 @@
             Download for Android
           </a>
           <a class="btn btn-light" href="https://github.com/Conqueror102/StatusClear" target="_blank" rel="noopener">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
             Star on GitHub <span class="tnum" style="color:var(--muted)" data-stars></span>
           </a>
         </div>
       </div>
       <div class="foot">
         <div>
-          <div style="display:flex;gap:10px;align-items:center;color:var(--on-dark);font:700 17px/1 var(--display)"><span class="logo" style="width:28px;height:28px;border-radius:8px"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l1.9 5.6L19.5 9.5l-5.6 1.9L12 17l-1.9-5.6L4.5 9.5l5.6-1.9z" fill="#04210F"/></svg></span>StatusClear</div>
+          <div style="display:flex;gap:10px;align-items:center;color:var(--on-dark);font:600 17px/1 var(--display)"><span class="logo" style="width:28px;height:28px;border-radius:8px"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l1.9 5.6L19.5 9.5l-5.6 1.9L12 17l-1.9-5.6L4.5 9.5l5.6-1.9z" fill="#04210F"/></svg></span>StatusClear</div>
           <p class="disclaimer">StatusClear is an independent project, not affiliated with, endorsed by, or sponsored by WhatsApp or Meta. WhatsApp is a trademark of its owner.</p>
         </div>
         <div class="foot-links">
-          <a href="https://github.com/Conqueror102/StatusClear" target="_blank" rel="noopener">Source code</a>
+          <a href="https://github.com/Conqueror102/StatusClear" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>GitHub</a>
           <a href="https://github.com/Conqueror102/StatusClear/releases" target="_blank" rel="noopener">All releases</a>
           <a href="https://github.com/Conqueror102/StatusClear/blob/main/LICENSE" target="_blank" rel="noopener">GPL-3.0</a>
         </div>
