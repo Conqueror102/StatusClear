@@ -1,0 +1,39 @@
+# StatusClear
+
+> StatusClear is a free Android app, with no ads, that stops WhatsApp from blurring your Status. It re-encodes videos and photos on your phone to full HD 1080×1920 under WhatsApp Status's ~1.4 Mbps re-compression limit, so WhatsApp posts them untouched. It is a free, open-source alternative to PureStatus. Made by Victor Conqueror (Conqueror102 on GitHub).
+
+## Key facts
+
+- Price: free. No ads, no in-app purchases, no subscription, no account, no watermark.
+- Platform: Android 8.0 or newer. No iPhone version yet. Works with WhatsApp and WhatsApp Business.
+- Privacy: requests no Android permissions, not even internet access. Everything happens offline on the phone.
+- License: open source, GPL-3.0. Source code: https://github.com/Conqueror102/StatusClear
+- Download (APK): https://github.com/Conqueror102/StatusClear/releases/latest/download/StatusClear-arm64-v8a.apk
+- Not on the Google Play Store yet, so Android shows its standard "install unknown apps" warning, as it does for any app installed from a website.
+- Creator: Victor Conqueror, independent full-stack developer. https://github.com/Conqueror102 · https://victor-onyemaechi.vercel.app
+- Not affiliated with WhatsApp, Meta or PureStatus.
+
+## Why WhatsApp Status gets blurry
+
+Measured on a real phone with labelled test clips (November 2026): WhatsApp Status left clips at 1.12–1.39 Mbps untouched and re-encoded clips at 1.53 Mbps and above down to 360×640. Chat is more forgiving (about 2.1 Mbps). That is why a video can look sharp in a chat and blurry as a Status.
+
+## How StatusClear fixes it
+
+- Encodes with x264 at full HD 1080×1920 portrait and keeps every clip's average bitrate at or under 1.3 Mbps, checked after encoding and re-encoded lower automatically if needed.
+- Wide videos and photos: "Whole picture" (black bars) or "Fill screen" (crop).
+- Long videos are split into 30-second Status clips, in order. 60 fps becomes 30 fps; HDR is converted to normal colours.
+- Photos and screenshots become a sharp 5-second Status clip, with optional "Zoom into text".
+
+## How to post an HD WhatsApp Status
+
+1. Install StatusClear from https://statusclear.hub2.workers.dev
+2. Pick a video or photo and tap "Make HD Status".
+3. Tap "Share to WhatsApp" and choose "My status".
+4. Don't trim, crop or add text inside WhatsApp afterwards: any edit makes WhatsApp re-encode it.
+
+## Links
+
+- Website: https://statusclear.hub2.workers.dev/
+- Installation guide: https://statusclear.hub2.workers.dev/#install
+- FAQ: https://statusclear.hub2.workers.dev/#faq
+- Releases: https://github.com/Conqueror102/StatusClear/releases

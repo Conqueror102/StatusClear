@@ -1,7 +1,10 @@
 # StatusClear
 
 **Post sharp WhatsApp Statuses, not blurry ones.** A free, open-source Android app
-that prepares your videos and photos so WhatsApp Status doesn't crush them.
+with no ads that prepares your videos and photos so WhatsApp Status doesn't crush them.
+A free alternative to PureStatus: no ads, no in-app purchases, no account, no watermark.
+
+Made by [Victor Conqueror](https://victor-onyemaechi.vercel.app) ([@Conqueror102](https://github.com/Conqueror102)).
 
 [**⬇ Download the APK**](https://github.com/Conqueror102/StatusClear/releases/latest) ·
 [Website](https://statusclear.hub2.workers.dev/) ·
@@ -83,4 +86,4 @@ licensed, so the app is GPL too: you may use, change and share it, as long as yo
 share your changes under the same license.
 
 *StatusClear is an independent project and is not affiliated with, endorsed by,
-or sponsored by WhatsApp or Meta. WhatsApp is a trademark of its owner.*
+or sponsored by WhatsApp, Meta or PureStatus. WhatsApp and PureStatus are trademarks of their owners.*
