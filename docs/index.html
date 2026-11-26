@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StatusClear — sharp WhatsApp Status videos & photos</title>
+<meta name="description" content="Free, open-source Android app that keeps your WhatsApp Status videos and photos sharp. No account, no uploads.">
+<meta name="theme-color" content="#0E1116">
+<meta property="og:type" content="website">
+<meta property="og:title" content="StatusClear — post a sharp WhatsApp Status, not a blurry one">
+<meta property="og:description" content="Free Android app. Keeps your Status videos and photos in full HD. Open source, no account, nothing uploaded.">
+<meta property="og:image" content="https://conqueror102.github.io/StatusClear/img/og.png">
+<meta property="og:url" content="https://conqueror102.github.io/StatusClear/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2325D366'/%3E%3Cpath d='M32 12l4.5 12.5L49 29l-12.5 4.5L32 46l-4.5-12.5L15 29l12.5-4.5z' fill='%2304210F'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #0E1116;
+    --card: #171C23;
+    --card-hi: #1F262F;
+    --line: #2A323C;
+    --green: #25D366;
+    --green-dim: #123322;
+    --ink: #04210F;
+    --text: #F1F4F7;
+    --muted: #8B95A1;
+    --bad: #FF6B6B;
+    --radius: 20px;
+    --max: 1080px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--green); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 16px; }
+  /* The tilted phone mockups must never cause sideways scrolling. */
+  main { overflow-x: clip; }
+
+  /* header */
+  header { position: sticky; top: 0; z-index: 10; background: rgba(14,17,22,.85); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 19px; color: var(--text); }
+  .brand:hover { text-decoration: none; }
+  .logo { width: 32px; height: 32px; border-radius: 9px; background: var(--green); display: grid; place-items: center; flex: none; }
+  .star-btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px;
+    border: 1px solid var(--line); border-radius: 999px; background: var(--card);
+    color: var(--text); font-weight: 600; font-size: 14px; white-space: nowrap;
+  }
+  .star-btn:hover { text-decoration: none; border-color: var(--green); }
+  .star-btn .count { color: var(--muted); font-weight: 500; padding-left: 8px; border-left: 1px solid var(--line); }
+
+  /* hero */
+  .hero { padding: 56px 0 40px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 40px; align-items: center; }
+  .eyebrow { display: inline-block; padding: 5px 12px; border-radius: 999px; background: var(--green-dim); color: var(--green); font-size: 13px; font-weight: 600; margin-bottom: 18px; }
+  h1 { font-size: clamp(36px, 6vw, 60px); line-height: 1.05; letter-spacing: -.02em; margin: 0 0 18px; }
+  h1 em { font-style: normal; color: var(--green); }
+  .lead { font-size: 18px; color: var(--muted); max-width: 520px; margin: 0 0 28px; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px; padding: 16px 24px; border-radius: 16px;
+    font-weight: 700; font-size: 17px; border: 0; cursor: pointer;
+  }
+  .btn:hover { text-decoration: none; }
+  .btn-primary { background: var(--green); color: var(--ink); }
+  .btn-primary:hover { filter: brightness(1.07); }
+  .btn-ghost { background: var(--card); color: var(--text); border: 1px solid var(--line); }
+  .meta { margin-top: 16px; color: var(--muted); font-size: 14px; }
+  .meta b { color: var(--text); font-weight: 600; }
+  .alt-link { display: inline-block; margin-top: 8px; font-size: 14px; }
+
+  .phones { position: relative; height: 540px; }
+  .phone {
+    position: absolute; width: 230px; border-radius: 30px; overflow: hidden;
+    border: 6px solid #232a33; box-shadow: 0 30px 60px rgba(0,0,0,.5); background: #000;
+  }
+  .phone img { display: block; width: 100%; height: auto; }
+  .phone.p1 { left: 4%; top: 30px; transform: rotate(-6deg); }
+  .phone.p2 { left: 32%; top: 0; z-index: 2; }
+  .phone.p3 { left: 60%; top: 40px; transform: rotate(6deg); }
+
+  section { padding: 56px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: clamp(26px, 4vw, 36px); letter-spacing: -.01em; margin: 0 0 12px; }
+  .sub { color: var(--muted); max-width: 640px; margin: 0 0 32px; font-size: 17px; }
+
+  /* chart */
+  .chart { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+  .bars { position: relative; display: grid; gap: 10px; }
+  .bar-row { display: grid; grid-template-columns: 84px 1fr 150px; align-items: center; gap: 12px; font-size: 14px; }
+  .bar-row .lbl { color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+  .track { position: relative; height: 26px; background: var(--card-hi); border-radius: 8px; overflow: visible; }
+  .fill { height: 100%; border-radius: 8px; }
+  .fill.ok { background: var(--green); }
+  .fill.bad { background: var(--bad); }
+  .res { font-size: 13px; }
+  .res.ok { color: var(--green); }
+  .res.bad { color: var(--bad); }
+  .limit { position: absolute; top: -8px; bottom: -8px; width: 0; border-left: 2px dashed var(--text); pointer-events: none; }
+  .limit span { position: absolute; top: -22px; left: 6px; white-space: nowrap; font-size: 12px; font-weight: 600; }
+  .legend { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 18px; font-size: 13px; color: var(--muted); }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+
+  /* features */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+  .card h3 { margin: 12px 0 6px; font-size: 18px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  .ic { width: 44px; height: 44px; border-radius: 13px; background: var(--green-dim); display: grid; place-items: center; }
+  .ic svg { width: 24px; height: 24px; stroke: var(--green); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* steps */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: s; }
+  .step { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+  .step::before { counter-increment: s; content: counter(s); display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--green-dim); color: var(--green); font-weight: 700; margin-bottom: 12px; }
+  .step h3 { margin: 0 0 6px; font-size: 17px; }
+  .step p { margin: 0; color: var(--muted); font-size: 15px; }
+  .which { margin-top: 20px; background: var(--card-hi); border-radius: 16px; padding: 16px 18px; font-size: 15px; color: var(--muted); }
+  .which b { color: var(--text); }
+
+  /* faq */
+  details { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 4px 20px; margin-bottom: 10px; }
+  summary { cursor: pointer; font-weight: 600; padding: 14px 0; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--muted); font-size: 20px; line-height: 1; }
+  details[open] summary::after { content: "–"; }
+  details p { margin: 0 0 16px; color: var(--muted); }
+
+  /* star band */
+  .band { text-align: center; background: linear-gradient(180deg, var(--green-dim), transparent); border: 1px solid var(--line); border-radius: 28px; padding: 44px 20px; }
+  .band p { color: var(--muted); max-width: 520px; margin: 0 auto 22px; }
+
+  footer { border-top: 1px solid var(--line); padding: 28px 0 40px; color: var(--muted); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+  .disclaimer { font-size: 13px; max-width: 620px; }
+
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; padding-top: 36px; }
+    .phones { height: 400px; max-width: 420px; width: 100%; margin: 0 auto; }
+    .phone { width: 165px; border-radius: 22px; border-width: 4px; }
+    .grid, .steps { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) {
+    /* On phones the colours + legend carry the result; keep each row on one line. */
+    .bar-row { grid-template-columns: 40px 1fr; }
+    .bar-row .res, .bar-row .u { display: none; }
+    .chart { padding: 28px 16px 20px; }
+    .star-btn .txt { display: none; }
+    .btn { width: 100%; justify-content: center; }
+    .phones { height: 330px; }
+    .phone { width: 138px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="#">
+      <span class="logo"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2l1.9 5.6L19.5 9.5l-5.6 1.9L12 17l-1.9-5.6L4.5 9.5l5.6-1.9z M19 14l.9 2.4 2.4.9-2.4.9L19 20.6l-.9-2.4-2.4-.9 2.4-.9z" fill="#04210F"/></svg></span>
+      StatusClear
+    </a>
+    <a class="star-btn" id="starBtn" href="https://github.com/Conqueror102/StatusClear" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+      <span class="txt">Star on GitHub</span>
+      <span class="count" id="starCount">★</span>
+    </a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <div>
+      <span class="eyebrow">Free · Open source · Android</span>
+      <h1>Post a sharp Status,<br><em>not a blurry one.</em></h1>
+      <p class="lead">WhatsApp crushes Status videos and photos down to 360×640 when they're over its limit. StatusClear prepares them to fit, so they stay in full HD.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" id="dlMain" href="https://github.com/Conqueror102/StatusClear/releases/latest/download/StatusClear-arm64-v8a.apk">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>
+          Download for Android
+        </a>
+        <a class="btn btn-ghost" href="#how">How it works</a>
+      </div>
+      <p class="meta"><span id="relInfo"><b>Latest version</b></span> · Android 8.0+ · about 35 MB</p>
+      <a class="alt-link" href="#install">Older 32-bit phone? Get the other download</a>
+    </div>
+    <div class="phones" aria-hidden="true">
+      <div class="phone p1"><img src="img/home.webp" alt="" width="540" height="1212"></div>
+      <div class="phone p2"><img src="img/preview.webp" alt="" width="540" height="1212"></div>
+      <div class="phone p3"><img src="img/done.webp" alt="" width="540" height="1212"></div>
+    </div>
+  </div>
+
+  <section id="how">
+    <h2>Why your Status gets blurry</h2>
+    <p class="sub">We posted test clips at different quality levels and measured what WhatsApp did to each. Status keeps anything under about <b style="color:var(--text)">1.4 Mbps</b> untouched. Anything above gets crushed to 360×640. StatusClear keeps every clip under 1.3 Mbps.</p>
+    <div class="chart">
+      <div class="bars" id="bars"></div>
+      <div class="legend">
+        <span><i class="dot" style="background:var(--green)"></i>Posted untouched (full HD)</span>
+        <span><i class="dot" style="background:var(--bad)"></i>Crushed to 360×640 by WhatsApp</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Everything it does for you</h2>
+    <p class="sub">Pick a video or photo, tap once, share. The tricky parts happen in the background.</p>
+    <div class="grid">
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>Stays under the limit</h3><p>Every clip is checked after it's made. If one comes out too big, it's redone smaller automatically.</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></svg></div><h3>Better encoder</h3><p>Uses x264, a professional video encoder that looks much sharper at small sizes than your phone's built-in one.</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></div><h3>Full-HD portrait</h3><p>Made for the tall Status screen. Wide pictures get "Whole picture" or "Fill screen", whichever you prefer.</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div><h3>Long videos, split</h3><p>Videos are cut into 30-second clips, in order. 60 fps and HDR videos are handled too.</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg></div><h3>Sharp photos</h3><p>Photos and screenshots become a crisp 5-second clip. "Zoom into text" helps with small writing.</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div><h3>Private</h3><p>Everything happens on your phone. No account, no uploads, no ads, no tracking.</p></div>
+    </div>
+  </section>
+
+  <section id="install">
+    <h2>Install in a minute</h2>
+    <p class="sub">StatusClear isn't on the Play Store yet, so you install the file directly. That's normal for open-source apps.</p>
+    <div class="steps">
+      <div class="step"><h3>Download</h3><p>Tap <a href="https://github.com/Conqueror102/StatusClear/releases/latest/download/StatusClear-arm64-v8a.apk">Download for Android</a> on your phone.</p></div>
+      <div class="step"><h3>Allow the install</h3><p>Open the file. Android asks to allow installs from your browser — allow it, then tap <b style="color:var(--text)">Install</b>.</p></div>
+      <div class="step"><h3>Post</h3><p>Pick a video or photo, tap <b style="color:var(--text)">Make HD Status</b>, then <b style="color:var(--text)">Share to WhatsApp → My status</b>.</p></div>
+    </div>
+    <div class="which">
+      <b>Which download?</b> Almost every phone from the last 7+ years needs the
+      <a href="https://github.com/Conqueror102/StatusClear/releases/latest/download/StatusClear-arm64-v8a.apk">standard version (arm64)</a>.
+      If it says "app not installed" on an older phone, use the
+      <a href="https://github.com/Conqueror102/StatusClear/releases/latest/download/StatusClear-armeabi-v7a.apk">32-bit version (armeabi-v7a)</a>.
+      All versions are on the <a href="https://github.com/Conqueror102/StatusClear/releases" target="_blank" rel="noopener">releases page</a>.
+    </div>
+  </section>
+
+  <section>
+    <h2>Questions</h2>
+    <details><summary>Is it safe?</summary><p>Yes. The full source code is public on GitHub, so anyone can check exactly what it does. It needs no special permissions, has no ads or trackers, and never uploads your files.</p></details>
+    <details><summary>Why does Android warn me when installing?</summary><p>Android shows that warning for any app installed from outside the Play Store. Each release is signed with the same key, so updates install cleanly over the old version.</p></details>
+    <details><summary>Does it work with WhatsApp Business?</summary><p>Yes. If WhatsApp isn't installed but WhatsApp Business is, StatusClear shares straight to it.</p></details>
+    <details><summary>My Status still looks soft — why?</summary><p>Don't trim, crop or add text in WhatsApp after sharing: any edit makes WhatsApp re-encode it. For wide pictures, try "Fill screen" so the picture uses the whole Status screen.</p></details>
+    <details><summary>Is there an iPhone version?</summary><p>Not yet — StatusClear is Android only for now.</p></details>
+  </section>
+
+  <section>
+    <div class="band">
+      <h2>Found it useful?</h2>
+      <p>StatusClear is free and open source. A star on GitHub helps other people find it.</p>
+      <a class="btn btn-primary" href="https://github.com/Conqueror102/StatusClear" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
+        Star StatusClear on GitHub
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>© StatusClear · <a href="https://github.com/Conqueror102/StatusClear/blob/main/LICENSE" target="_blank" rel="noopener">GPL-3.0</a> · <a href="https://github.com/Conqueror102/StatusClear" target="_blank" rel="noopener">Source code</a></div>
+    <div class="disclaimer">StatusClear is an independent project, not affiliated with, endorsed by, or sponsored by WhatsApp or Meta. WhatsApp is a trademark of its owner.</div>
+  </div>
+</footer>
+
+<script>
+  // Measured: what WhatsApp Status did to each test clip (Mbps, whole file).
+  var tests = [
+    [1.12, true], [1.15, true], [1.27, true], [1.39, true],
+    [1.53, false], [1.56, false], [2.13, false], [3.05, false], [4.03, false]
+  ];
+  var max = 4.2, limit = 1.4;
+  var bars = document.getElementById('bars');
+  tests.forEach(function (t) {
+    var row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML =
+      '<span class="lbl">' + t[0].toFixed(2) + '<span class="u"> Mbps</span></span>' +
+      '<div class="track"><div class="fill ' + (t[1] ? 'ok' : 'bad') + '" style="width:' + (t[0] / max * 100) + '%"></div></div>' +
+      '<span class="res ' + (t[1] ? 'ok' : 'bad') + '">' + (t[1] ? 'Kept in full HD' : 'Crushed to 360×640') + '</span>';
+    bars.appendChild(row);
+  });
+  // Dashed "Status limit" line across the bar tracks (re-placed when the layout changes).
+  var line = document.createElement('div');
+  line.className = 'limit';
+  line.innerHTML = '<span>Status limit ≈ 1.4 Mbps</span>';
+  bars.appendChild(line);
+  function placeLimit() {
+    var track = bars.querySelector('.track');
+    if (track) line.style.left = (track.offsetLeft + track.offsetWidth * (limit / max)) + 'px';
+  }
+  requestAnimationFrame(placeLimit);
+  window.addEventListener('resize', placeLimit);
+
+  // Live star count and latest version (best effort; the page works without it).
+  fetch('https://api.github.com/repos/Conqueror102/StatusClear')
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) { if (d && typeof d.stargazers_count === 'number') document.getElementById('starCount').textContent = '★ ' + d.stargazers_count; })
+    .catch(function () {});
+  fetch('https://api.github.com/repos/Conqueror102/StatusClear/releases/latest')
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) {
+      if (!d || !d.tag_name) return;
+      var arm = (d.assets || []).filter(function (a) { return /arm64/.test(a.name); })[0];
+      var size = arm ? ' · ' + Math.round(arm.size / 1048576) + ' MB' : '';
+      document.getElementById('relInfo').innerHTML = '<b>Version ' + d.tag_name.replace(/^v/, '') + '</b>';
+      if (arm) document.querySelector('.meta').innerHTML = '<b>Version ' + d.tag_name.replace(/^v/, '') + '</b> · Android 8.0+' + size;
+    })
+    .catch(function () {});
+</script>
+</body>
+</html>

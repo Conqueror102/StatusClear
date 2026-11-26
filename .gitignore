@@ -1,0 +1,12 @@
+.gradle/
+.kotlin/
+build/
+app/build/
+local.properties
+signing.properties
+*.jks
+*.keystore
+.idea/
+*.iml
+# Sandbox-only dependency fetcher from the original build VM; not needed.
+tools/
