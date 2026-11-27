@@ -1,20 +1,21 @@
 package com.example.statusclear
 
-import android.app.Application
+import androidx.compose.material.icons.filled.NotificationsActive
+import androidx.compose.runtime.mutableStateOf
+import androidx.activity.result.contract.ActivityResultContracts
+import android.Manifest
 import android.content.ClipData
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -59,19 +60,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * The "lazy" path: Gallery → Share → HD Status. A see-through screen with a small
@@ -80,37 +73,53 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 class QuickShareActivity : ComponentActivity() {
 
-    private val vm: QuickShareViewModel by viewModels()
-    private var sourceUri: Uri? = null
-    private var sourceType: String = ""
+    private val askNotify = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        notifyOffered.value = false
+        if (granted) QuickShareService.ensureChannels(this)
+    }
+    /** Show the one-time "Get a ping when it's ready" row. */
+    private val notifyOffered = mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        // Encoding can take a while; don't let the screen sleep and pause it.
+        // Keep the screen on while it works; leaving is fine too (the service keeps going).
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        sourceUri = sharedUri(intent)
-        sourceType = intent?.type.orEmpty()
-        val uri = sourceUri
-        if (uri == null) {
-            Toast.makeText(this, "Nothing to share was received.", Toast.LENGTH_SHORT).show()
-            finish()
-            return
+        if (savedInstanceState == null) {
+            when (intent?.action) {
+                Intent.ACTION_SEND -> {
+                    val uri = sharedUri(intent)
+                    if (uri == null) {
+                        Toast.makeText(this, "Nothing to share was received.", Toast.LENGTH_SHORT).show()
+                        finish()
+                        return
+                    }
+                    QuickJob.start(this, uri, intent.type.orEmpty())
+                }
+                QuickShareService.ACTION_RESUME -> {
+                    // Opened from a notification: show the existing job, start nothing new.
+                    if (QuickJob.state.value is Quick.Idle) {
+                        Toast.makeText(this, "That Status was cancelled. Share it again from your Gallery.", Toast.LENGTH_LONG).show()
+                        finish()
+                        return
+                    }
+                }
+                else -> { finish(); return }
+            }
         }
-        vm.begin(uri, when {
-            sourceType.startsWith("video/") -> true
-            sourceType.startsWith("image/") -> false
-            else -> null
-        })
+        notifyOffered.value = Build.VERSION.SDK_INT >= 33 && !QuickShareService.canNotify(this) && !Prefs.notifyAsked(this)
 
         // Open WhatsApp only while we're in front: Android blocks apps from launching
-        // others from the background, so if the person left, we wait for them to return.
+        // others from the background, so if the person left, the notification (or
+        // coming back here) does the hand-off.
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                vm.state.collect { s ->
-                    if (s is Quick.Done && vm.markHandedOff()) {
-                        Sharing.shareClips(this@QuickShareActivity, s.clips)
+                QuickJob.state.collect { s ->
+                    if (s is Quick.Done && QuickJob.markHandedOff()) {
+                        QuickShareService.dismissReady(this@QuickShareActivity)
+                        Sharing.shareClips(this@QuickShareActivity, s.clips, toStatus = true)
+                        QuickJob.reset()
                         finish()
                     }
                 }
@@ -118,11 +127,14 @@ class QuickShareActivity : ComponentActivity() {
         }
 
         setContent {
-            val state by vm.state.collectAsStateWithLifecycle()
+            val state by QuickJob.state.collectAsStateWithLifecycle()
+            val offerNotify by notifyOffered
             StatusClearTheme {
-                BackHandler { cancelAndClose() }
+                BackHandler { leaveRunning() }
                 QuickSheet(
                     state = state,
+                    offerNotify = offerNotify && (state is Quick.Opening || state is Quick.Working),
+                    onAllowNotify = ::requestNotify,
                     onCancel = ::cancelAndClose,
                     onOptions = ::openFullApp
                 )
@@ -130,21 +142,54 @@ class QuickShareActivity : ComponentActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        QuickJob.sheetVisible = true
+    }
+
+    override fun onPause() {
+        QuickJob.sheetVisible = false
+        super.onPause()
+    }
+
+    private fun requestNotify() {
+        Prefs.setNotifyAsked(this)
+        if (Build.VERSION.SDK_INT >= 33) askNotify.launch(Manifest.permission.POST_NOTIFICATIONS)
+    }
+
+    /**
+     * Back = "I'll carry on with something else", not "cancel": the service keeps going and
+     * the notification brings the person back. Only the Cancel buttons stop the work.
+     */
+    private fun leaveRunning() {
+        if (!QuickJob.isBusy) { cancelAndClose(); return }
+        Toast.makeText(
+            this,
+            if (QuickShareService.canNotify(this)) "Still making it HD. We'll ping you when it's ready."
+            else "Still making it HD. It'll be saved in Gallery › Movies › ${Transcoder.SAVE_FOLDER}.",
+            Toast.LENGTH_LONG
+        ).show()
+        finish()
+    }
+
     private fun cancelAndClose() {
-        vm.cancel()
+        if (QuickJob.state.value !is Quick.Done) QuickJob.cancel(this)
+        QuickJob.reset()
         finish()
     }
 
     /** Stop here and continue in the full app with the same video/photo. */
     private fun openFullApp() {
-        vm.cancel()
-        sourceUri?.let { uri ->
+        val uri = QuickJob.sourceUri
+        val type = QuickJob.sourceType
+        QuickJob.cancel(this)
+        uri?.let {
             val intent = Intent(this, MainActivity::class.java)
                 .setAction(Intent.ACTION_SEND)
-                .setType(sourceType.ifBlank { contentResolver.getType(uri) ?: "*/*" })
-                .putExtra(Intent.EXTRA_STREAM, uri)
+                .setType(type.ifBlank { contentResolver.getType(it) ?: "*/*" })
+                .putExtra(Intent.EXTRA_STREAM, it)
                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
-            intent.clipData = ClipData.newRawUri(null, uri)
+            intent.clipData = ClipData.newRawUri(null, it)
             runCatching { startActivity(intent) }
         }
         finish()
@@ -160,75 +205,16 @@ class QuickShareActivity : ComponentActivity() {
     }
 }
 
-// ---------------------------------------------------------------- state
-
-sealed interface Quick {
-    data object Opening : Quick
-    data class Working(
-        val thumbnail: Bitmap?,
-        val isVideo: Boolean,
-        val progress: Float = 0f,
-        val part: Int = 1,
-        val parts: Int = 1
-    ) : Quick
-    data class Done(val thumbnail: Bitmap?, val clips: List<Clip>) : Quick
-    data class Failed(val message: String) : Quick
-}
-
-class QuickShareViewModel(app: Application) : AndroidViewModel(app) {
-    private val _state = MutableStateFlow<Quick>(Quick.Opening)
-    val state: StateFlow<Quick> = _state
-
-    private val cancelFlag = AtomicBoolean(false)
-    private val started = AtomicBoolean(false)
-    private val handedOff = AtomicBoolean(false)
-
-    /** True exactly once, the first time the clips are handed to WhatsApp. */
-    fun markHandedOff() = handedOff.compareAndSet(false, true)
-
-    fun begin(uri: Uri, isVideo: Boolean?) {
-        if (!started.compareAndSet(false, true)) return // survives rotation
-        val ctx = getApplication<Application>()
-        viewModelScope.launch {
-            val outcome = withContext(Dispatchers.Default) {
-                runCatching {
-                    val video = isVideo ?: Transcoder.isVideoUri(ctx, uri)
-                        ?: throw IllegalArgumentException("That file isn't a video or a photo.")
-                    val info = Transcoder.probeSource(ctx, uri, video)
-                    val thumb = Transcoder.loadThumbnail(ctx, uri, video, maxDim = 240)
-                    // Same settings as the app, using the last "Fit to Status screen" choice.
-                    val ready = Screen.Ready(uri, info, thumb, zoomText = false, fill = Prefs.fill(ctx))
-                    _state.value = Quick.Working(thumb, video, parts = info.partCount)
-                    val clips = makeStatusClips(ctx, ready, cancelFlag::get) { p, part, total ->
-                        _state.update { s ->
-                            if (s is Quick.Working) s.copy(progress = p, part = part, parts = total) else s
-                        }
-                    }
-                    Quick.Done(thumb, clips)
-                }
-            }
-            outcome
-                .onSuccess { _state.value = it }
-                .onFailure { e ->
-                    if (e !is Transcoder.CancelledException) {
-                        Log.e("StatusClear", "quick share failed", e)
-                        _state.value = Quick.Failed(friendlyError(e, "Something went wrong while preparing your Status."))
-                    }
-                }
-        }
-    }
-
-    fun cancel() = cancelFlag.set(true)
-
-    override fun onCleared() {
-        cancelFlag.set(true)
-    }
-}
-
 // ---------------------------------------------------------------- UI
 
 @Composable
-private fun QuickSheet(state: Quick, onCancel: () -> Unit, onOptions: () -> Unit) {
+private fun QuickSheet(
+    state: Quick,
+    offerNotify: Boolean,
+    onAllowNotify: () -> Unit,
+    onCancel: () -> Unit,
+    onOptions: () -> Unit
+) {
     Box(
         Modifier
             .fillMaxSize()
@@ -260,7 +246,7 @@ private fun QuickSheet(state: Quick, onCancel: () -> Unit, onOptions: () -> Unit
 
                 when (state) {
                     is Quick.Failed -> FailedBody(state, onCancel, onOptions)
-                    else -> ProgressBody(state, onCancel, onOptions)
+                    else -> ProgressBody(state, offerNotify, onAllowNotify, onCancel, onOptions)
                 }
             }
         }
@@ -268,7 +254,7 @@ private fun QuickSheet(state: Quick, onCancel: () -> Unit, onOptions: () -> Unit
 }
 
 @Composable
-private fun ProgressBody(state: Quick, onCancel: () -> Unit, onOptions: () -> Unit) {
+private fun ProgressBody(state: Quick, offerNotify: Boolean, onAllowNotify: () -> Unit, onCancel: () -> Unit, onOptions: () -> Unit) {
     val thumb = when (state) {
         is Quick.Working -> state.thumbnail
         is Quick.Done -> state.thumbnail
@@ -277,7 +263,7 @@ private fun ProgressBody(state: Quick, onCancel: () -> Unit, onOptions: () -> Un
     val isVideo: Boolean? = (state as? Quick.Working)?.isVideo
     val pct = ((state as? Quick.Working)?.progress ?: 0f).coerceIn(0f, 1f)
     val (title, subtitle) = when (state) {
-        is Quick.Opening -> "Getting it ready…" to "Reading your file"
+        is Quick.Opening, is Quick.Idle -> "Getting it ready…" to "Reading your file"
         is Quick.Working -> "Making it HD for Status" to buildString {
             if (state.parts > 1) append("Clip ${state.part} of ${state.parts} · ")
             else append(if (state.isVideo) "Video · " else "Photo · ")
@@ -314,10 +300,22 @@ private fun ProgressBody(state: Quick, onCancel: () -> Unit, onOptions: () -> Un
     }
     Spacer(Modifier.height(10.dp))
     Text(
-        if (state is Quick.Done) "Choose My status in WhatsApp, then send."
-        else "WhatsApp opens by itself when it's ready. Keep this screen open.",
+        if (state is Quick.Done) "Tap send in WhatsApp to post it."
+        else "WhatsApp opens by itself when it's ready. You can switch apps; it keeps going.",
         fontSize = 13.sp, color = Palette.Muted
     )
+    if (offerNotify) {
+        Spacer(Modifier.height(12.dp))
+        Row(
+            Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(Palette.CardHi).padding(start = 14.dp, end = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(Icons.Filled.NotificationsActive, null, tint = Palette.Green, modifier = Modifier.size(18.dp))
+            Spacer(Modifier.width(10.dp))
+            Text("Get a ping when it's ready", fontSize = 14.sp, color = Palette.Text, modifier = Modifier.weight(1f))
+            TextButton(onClick = onAllowNotify) { Text("Allow", color = Palette.Green, fontWeight = FontWeight.SemiBold) }
+        }
+    }
     Spacer(Modifier.height(12.dp))
     if (state !is Quick.Done) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {

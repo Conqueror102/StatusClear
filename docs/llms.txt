@@ -6,7 +6,7 @@
 
 - Price: free. No ads, no in-app purchases, no subscription, no account, no watermark.
 - Platform: Android 8.0 or newer. No iPhone version yet. Works with WhatsApp and WhatsApp Business.
-- Privacy: requests no Android permissions, not even internet access. Everything happens offline on the phone.
+- Privacy: no internet permission, so it cannot upload anything. Everything happens offline on the phone. The only runtime request is optional: permission to show a notification when a Status is ready.
 - License: open source, GPL-3.0. Source code: https://github.com/Conqueror102/StatusClear
 - Download (APK): https://github.com/Conqueror102/StatusClear/releases/latest/download/StatusClear-arm64-v8a.apk
 - Not on the Google Play Store yet, so Android shows its standard "install unknown apps" warning, as it does for any app installed from a website.
@@ -28,7 +28,7 @@ Measured on a real phone with labelled test clips (November 2026): WhatsApp Stat
 
 1. Install StatusClear from https://statusclear.hub2.workers.dev
 2. In your Gallery, tap Share on a video or photo and choose "HD Status". StatusClear prepares it in a small sheet (the app doesn't even open) and then opens WhatsApp by itself.
-3. Choose "My status" and send.
+3. WhatsApp opens on the Status screen: tap Send. (You can switch apps while it works; a notification says when it's ready.)
 4. Don't trim, crop or add text inside WhatsApp afterwards: any edit makes WhatsApp re-encode it.
 
 Alternatively, open the StatusClear app for more options (fit or fill wide pictures, zoom into text), then tap "Make HD Status" and "Share to WhatsApp".

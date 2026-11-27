@@ -14,6 +14,9 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 class MainActivity : ComponentActivity() {
@@ -39,7 +42,12 @@ class MainActivity : ComponentActivity() {
                 uri?.let { vm.pick(it, null) }
             }
 
+            var reminder by remember { mutableStateOf(Updates.reminderDue(this)) }
             val actions = UiActions(
+                version = remember { Updates.version(this) },
+                updateReminder = reminder,
+                checkUpdates = { reminder = false; Updates.openSite(this) },
+                snoozeUpdates = { reminder = false; Prefs.snoozeUpdate(this) },
                 pickVideo = { pickVideo.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly)) },
                 pickPhoto = { pickPhoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
                 browseFiles = { browse.launch(arrayOf("video/*", "image/*")) },

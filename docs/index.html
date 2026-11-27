@@ -71,12 +71,13 @@
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
       "featureList": [
         "Posts WhatsApp Status videos and photos in full HD 1080×1920",
-        "Share straight from your Gallery: Share, HD Status, My status. No need to open the app",
+        "Share straight from your Gallery: Share, HD Status, Send. No need to open the app",
+        "Keeps working in the background and notifies you when your Status is ready",
         "Keeps every clip under WhatsApp Status's ~1.4 Mbps limit and checks it before sharing",
         "Splits long videos into 30-second Status clips in order",
         "Turns photos and screenshots into a sharp 5-second Status",
         "Free, with no ads, no in-app purchases and no account",
-        "Works offline: nothing is uploaded, no permissions requested",
+        "Works offline: no internet access at all, nothing is uploaded",
         "Open source under GPL-3.0"
       ],
       "screenshot": [
@@ -112,7 +113,7 @@
         {
           "@type": "Question",
           "name": "How do I post a WhatsApp Status in HD without losing quality?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Install StatusClear (free, Android). In your Gallery, tap Share on the video or photo and choose HD Status. StatusClear prepares it in full HD and opens WhatsApp by itself: choose My status and send. Don't trim, crop or add text inside WhatsApp afterwards, because any edit makes WhatsApp re-encode it." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Install StatusClear (free, Android). In your Gallery, tap Share on the video or photo and choose HD Status. StatusClear prepares it in full HD and opens WhatsApp straight on the Status screen: tap Send. You can switch apps while it works; a notification tells you when it's ready. Don't trim, crop or add text inside WhatsApp afterwards, because any edit makes WhatsApp re-encode it." }
         },
         {
           "@type": "Question",
@@ -127,7 +128,7 @@
         {
           "@type": "Question",
           "name": "Is StatusClear safe?",
-          "acceptedAnswer": { "@type": "Answer", "text": "StatusClear asks Android for no permissions at all, not even internet access, so it cannot upload your files. Its full source code is public on GitHub, every release is signed with the same developer key, and Google Play Protect scans it during install." }
+          "acceptedAnswer": { "@type": "Answer", "text": "StatusClear has no internet access, so it cannot upload your files. The only thing it may ask is to show a notification when your Status is ready, and you can say no. Its full source code is public on GitHub, every release is signed with the same developer key, and Google Play Protect scans it during install." }
         },
         {
           "@type": "Question",
@@ -536,7 +537,7 @@
           <div class="num tnum">0</div>
         </div>
         <div class="tile tile-soft reveal">
-          <p class="label">From your Gallery to your Status: Share, HD Status, My status</p>
+          <p class="label">From your Gallery to your Status: Share, HD Status, Send</p>
           <div class="num tnum">3<span class="sym"> taps</span></div>
         </div>
       </div>
@@ -582,8 +583,8 @@
           <p class="lead" style="margin:20px 0 0">You don't even have to open StatusClear. Share a video or photo the way you always do, and it quietly makes it HD and hands it straight to WhatsApp.</p>
           <ol class="qs-steps">
             <li><b>Share</b><span>From your Gallery, or any app that has a Share button.</span></li>
-            <li><b>Tap &ldquo;HD Status&rdquo;</b><span>A small sheet shows the progress. WhatsApp opens by itself when it's ready.</span></li>
-            <li><b>Choose My status &rarr; Send</b><span>Posted in full HD. A copy is saved to your Gallery too.</span></li>
+            <li><b>Tap &ldquo;HD Status&rdquo;</b><span>A small sheet shows the progress. Busy? Switch apps; you'll get a ping when it's ready.</span></li>
+            <li><b>Tap Send</b><span>WhatsApp opens right on your Status. Posted in full HD, with a copy saved to your Gallery.</span></li>
           </ol>
           <p class="qs-note">Want to fit or fill a wide picture, or zoom into small text? Tap <b>More options</b> on the sheet, or open the app.</p>
         </div>
@@ -681,7 +682,7 @@
           <div class="trust-card hero-card reveal">
             <span class="ic"><svg viewBox="0 0 24 24"><path d="M2 8.8a15 15 0 0 1 20 0"/><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><path d="M3 3l18 18"/></svg></span>
             <h3>It can't upload your files</h3>
-            <p>StatusClear asks Android for no permissions at all, not even internet access. Check it yourself: Settings › Apps › StatusClear › Permissions.</p>
+            <p>StatusClear has no internet access at all. The only thing it may ask is to show a notification when your Status is ready, and you can say no. Check it yourself: Settings › Apps › StatusClear › Permissions.</p>
           </div>
           <div class="trust-card reveal">
             <span class="ic"><svg viewBox="0 0 24 24"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg></span>
@@ -716,10 +717,10 @@
       </div>
       <div class="faq">
         <details><summary>Why is my WhatsApp Status blurry?<span class="plus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>WhatsApp re-encodes any Status whose average bitrate is above about 1.4 Mbps, and when it does, it shrinks it to 360×640. Videos straight from a phone camera are usually far above that, so almost every clip gets crushed. StatusClear re-encodes your clip to full HD 1080×1920 under 1.3 Mbps on your phone, so WhatsApp posts it untouched.</p></details>
-        <details><summary>How do I post a WhatsApp Status in HD without losing quality?<span class="plus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>Install StatusClear (free, Android). In your Gallery, tap Share on the video or photo and choose HD Status. StatusClear prepares it in full HD and opens WhatsApp by itself: choose My status and send. Don't trim, crop or add text inside WhatsApp afterwards, because any edit makes WhatsApp re-encode it.</p></details>
+        <details><summary>How do I post a WhatsApp Status in HD without losing quality?<span class="plus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>Install StatusClear (free, Android). In your Gallery, tap Share on the video or photo and choose HD Status. StatusClear prepares it in full HD and opens WhatsApp straight on the Status screen: tap Send. You can switch apps while it works; a notification tells you when it's ready. Don't trim, crop or add text inside WhatsApp afterwards, because any edit makes WhatsApp re-encode it.</p></details>
         <details><summary>Is there a free alternative to PureStatus?<span class="plus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>Yes. StatusClear does the same job of keeping WhatsApp Status videos and photos sharp, and it is completely free: no ads, no in-app purchases, no account and no watermark. It is open source and works offline on Android 8.0 or newer. StatusClear is an independent project and is not affiliated with PureStatus.</p></details>
         <details><summary>Is StatusClear really free? Does it have ads?<span class="plus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>Yes, it is free, and there are no ads, no subscription, no in-app purchases and no account. It is open source under the GPL-3.0 license.</p></details>
-        <details><summary>Is StatusClear safe?<span class="plus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>StatusClear asks Android for no permissions at all, not even internet access, so it cannot upload your files. Its full source code is public on GitHub, every release is signed with the same developer key, and Google Play Protect scans it during install.</p></details>
+        <details><summary>Is StatusClear safe?<span class="plus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>StatusClear has no internet access, so it cannot upload your files. The only thing it may ask is to show a notification when your Status is ready, and you can say no. Its full source code is public on GitHub, every release is signed with the same developer key, and Google Play Protect scans it during install.</p></details>
         <details><summary>Why isn't StatusClear on the Play Store?<span class="plus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>Not yet. Until then you install it from statusclear.hub2.workers.dev, which is why Android shows the unknown apps warning. Android shows that warning for every app installed from a website. Every update is signed with the same key, so new versions install cleanly over the old one.</p></details>
         <details><summary>Which download do I need?<span class="plus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>Almost every phone from the last 7+ years needs the standard version, which is what the green button downloads. If your phone says “App not installed”, try the <a href="https://github.com/Conqueror102/StatusClear/releases/latest/download/StatusClear-armeabi-v7a.apk" style="text-decoration:underline">32-bit version for older phones</a>. All versions are on the <a href="https://github.com/Conqueror102/StatusClear/releases" target="_blank" rel="noopener" style="text-decoration:underline">releases page</a>.</p></details>
         <details><summary>Play Protect asked to scan the app. Is that a problem?<span class="plus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>No. Some phones ask to scan apps that are new to Google. Tap “Scan app” and it will check StatusClear and let it install.</p></details>

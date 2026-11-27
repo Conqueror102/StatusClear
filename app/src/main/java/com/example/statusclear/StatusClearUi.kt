@@ -127,7 +127,13 @@ class UiActions(
     val browseFiles: () -> Unit,
     val shareAll: (List<Clip>) -> Unit,
     val shareClip: (Clip) -> Unit,
-    val playClip: (Clip) -> Unit
+    val playClip: (Clip) -> Unit,
+    /** Installed version, e.g. "1.4". */
+    val version: String = "",
+    /** Show the "it's been a while, check for a new version" card. */
+    val updateReminder: Boolean = false,
+    val checkUpdates: () -> Unit = {},
+    val snoozeUpdates: () -> Unit = {}
 )
 
 // ---------------------------------------------------------------- root
@@ -254,6 +260,7 @@ private fun HomeScreen(actions: UiActions) {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Spacer(Modifier.height(4.dp))
+        if (actions.updateReminder) UpdateReminderCard(actions)
         Text("Post a sharp Status,\nnot a blurry one.", fontSize = 28.sp, fontWeight = FontWeight.Bold, lineHeight = 34.sp)
         Text(
             "WhatsApp squeezes anything that doesn't fit its limits. We resize it to exactly what it expects, so it stays clear.",
@@ -281,18 +288,50 @@ private fun HomeScreen(actions: UiActions) {
         SectionCard {
             Text("How it works", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
             Spacer(Modifier.height(12.dp))
-            StepRow(1, "Pick a video or photo", "From your gallery, or shared from any app.")
+            StepRow(1, "Pick a video or photo", "Here, or faster: in your Gallery tap Share → HD Status.")
             StepRow(2, "We prepare it", "Right on your phone — nothing is uploaded.")
-            StepRow(3, "Share to WhatsApp", "Post to My status. It stays sharp.", last = true)
+            StepRow(3, "Post to My status", "WhatsApp opens ready to send. It stays sharp.", last = true)
         }
         Row(
-            Modifier.fillMaxWidth().padding(bottom = 16.dp),
+            Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(Icons.Filled.Lock, null, tint = Palette.Muted, modifier = Modifier.size(14.dp))
             Spacer(Modifier.width(6.dp))
             Text("Private: your files never leave this phone", color = Palette.Muted, fontSize = 12.sp)
+        }
+        Row(
+            Modifier.fillMaxWidth().padding(bottom = 12.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (actions.version.isNotBlank()) Text("Version ${actions.version} · ", color = Palette.Muted, fontSize = 12.sp)
+            TextButton(onClick = actions.checkUpdates, contentPadding = PaddingValues(horizontal = 4.dp)) {
+                Text("Check for updates", fontSize = 12.sp)
+            }
+        }
+    }
+}
+
+@Composable
+private fun UpdateReminderCard(actions: UiActions) {
+    Surface(color = Palette.GreenDim, shape = RoundedCornerShape(20.dp), modifier = Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(16.dp)) {
+            Text("There may be a newer StatusClear", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+            Spacer(Modifier.height(4.dp))
+            Text(
+                "You've had version ${actions.version} for a while. StatusClear never goes online, so it can't check by itself.",
+                color = Palette.Muted, fontSize = 13.sp, lineHeight = 18.sp
+            )
+            Spacer(Modifier.height(8.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(
+                    onClick = actions.checkUpdates,
+                    colors = ButtonDefaults.buttonColors(containerColor = Palette.Green, contentColor = Color(0xFF04210F))
+                ) { Text("Check now", fontWeight = FontWeight.SemiBold) }
+                TextButton(onClick = actions.snoozeUpdates) { Text("Later", color = Palette.Text) }
+            }
         }
     }
 }

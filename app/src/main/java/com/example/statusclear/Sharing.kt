@@ -18,8 +18,13 @@ object Sharing {
             FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", clip.result.file)
         }.getOrNull()
 
-    /** Opens WhatsApp (or a chooser if it isn't installed). Returns true if something opened. */
-    fun shareClips(context: Context, clips: List<Clip>): Boolean {
+    /**
+     * Opens WhatsApp (or a chooser if it isn't installed). Returns true if something opened.
+     * [toStatus]: ask WhatsApp to open its Status composer directly instead of the "Send to"
+     * list. This relies on WhatsApp honouring the (unofficial) "jid" extra; if it ever
+     * stops, WhatsApp simply shows the normal "Send to" list instead.
+     */
+    fun shareClips(context: Context, clips: List<Clip>, toStatus: Boolean = false): Boolean {
         val uris = clips.mapNotNull { shareUri(context, it) }
         if (uris.isEmpty()) {
             Toast.makeText(context, "Couldn't find the clips to share. Try making them again.", Toast.LENGTH_LONG).show()
@@ -40,7 +45,9 @@ object Sharing {
         return try {
             if (whatsapp != null) {
                 // Go straight to WhatsApp — no chooser in the way.
-                context.startActivity(Intent(intent).setPackage(whatsapp))
+                val direct = Intent(intent).setPackage(whatsapp)
+                if (toStatus) direct.putExtra("jid", "status@broadcast")
+                context.startActivity(direct)
             } else {
                 context.startActivity(chooser(context, intent))
             }
@@ -77,4 +84,43 @@ object Prefs {
     /** Last "Fit to Status screen" choice for wide pictures: true = Fill screen. */
     fun fill(context: Context): Boolean = prefs(context).getBoolean("fill", false)
     fun setFill(context: Context, on: Boolean) = prefs(context).edit().putBoolean("fill", on).apply()
+
+    fun updateSnoozedAt(context: Context): Long = prefs(context).getLong("update_snoozed_at", 0L)
+    fun snoozeUpdate(context: Context) = prefs(context).edit().putLong("update_snoozed_at", System.currentTimeMillis()).apply()
+
+    /** We ask for the notification permission from the sheet at most once, and only when the person taps. */
+    fun notifyAsked(context: Context): Boolean = prefs(context).getBoolean("notify_asked", false)
+    fun setNotifyAsked(context: Context) = prefs(context).edit().putBoolean("notify_asked", true).apply()
+}
+
+/**
+ * Update checks without internet access: the app never goes online, so it can't know
+ * a new version exists. Instead it shows its version, opens the website on request,
+ * and after a few weeks gently suggests checking.
+ */
+object Updates {
+    const val SITE = "https://statusclear.hub2.workers.dev/"
+    private const val REMIND_AFTER_MS = 42L * 24 * 60 * 60 * 1000 // 6 weeks
+
+    fun version(context: Context): String = runCatching {
+        context.packageManager.getPackageInfo(context.packageName, 0).versionName
+    }.getOrNull() ?: ""
+
+    /** True once this version has been installed for 6 weeks (and not snoozed since). */
+    fun reminderDue(context: Context): Boolean {
+        val installed = runCatching {
+            context.packageManager.getPackageInfo(context.packageName, 0).lastUpdateTime
+        }.getOrDefault(System.currentTimeMillis())
+        val since = maxOf(installed, Prefs.updateSnoozedAt(context))
+        return System.currentTimeMillis() - since > REMIND_AFTER_MS
+    }
+
+    fun openSite(context: Context) {
+        Prefs.snoozeUpdate(context)
+        try {
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(SITE)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        } catch (_: Exception) {
+            Toast.makeText(context, "Open $SITE in your browser to get the latest version.", Toast.LENGTH_LONG).show()
+        }
+    }
 }

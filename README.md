@@ -42,7 +42,8 @@ Measured on a real phone with labelled test clips (Nov 2026):
   HDR is converted to normal colours, phone rotation is handled.
 - **Photos & screenshots** become a crisp 5-second clip, with an optional
   "Zoom into text" for small writing.
-- **Private.** Everything happens on your phone. No account, no uploads, no tracking.
+- **Private.** Everything happens on your phone. No internet access, no account, no uploads,
+  no tracking. The only thing it may ask is to show a notification when your Status is ready.
 
 ## Install
 
@@ -59,7 +60,8 @@ Measured on a real phone with labelled test clips (Nov 2026):
 
 1. In your Gallery, tap **Share** on a video or photo and choose **HD Status**.
    A small sheet prepares it; StatusClear itself doesn't even open.
-2. WhatsApp opens by itself: choose **My status** and send.
+2. WhatsApp opens by itself, right on the Status screen: tap **Send**.
+   Busy? Switch apps while it works; a notification tells you when it's ready.
 3. Don't trim or edit it inside WhatsApp — editing makes WhatsApp re-encode it.
 
 **With more options:** open StatusClear, pick a video or photo (choose *Whole picture*
