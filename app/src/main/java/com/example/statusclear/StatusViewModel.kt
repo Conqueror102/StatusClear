@@ -73,7 +73,7 @@ class StatusViewModel(app: Application) : AndroidViewModel(app) {
                     val video = isVideo ?: Transcoder.isVideoUri(ctx, uri)
                         ?: throw IllegalArgumentException("That file isn't a video or a photo.")
                     val info = Transcoder.probeSource(ctx, uri, video)
-                    Screen.Ready(uri, info, Transcoder.loadThumbnail(ctx, uri, video))
+                    Screen.Ready(uri, info, Transcoder.loadThumbnail(ctx, uri, video), fill = Prefs.fill(ctx))
                 }
             }
             result
@@ -123,35 +123,14 @@ class StatusViewModel(app: Application) : AndroidViewModel(app) {
         cancelFlag.set(false)
         _state.value = UiState(Screen.Working(ready, parts = ready.info.partCount))
         job = viewModelScope.launch {
+            if (Transcoder.needsFraming(ready.info.width, ready.info.height)) Prefs.setFill(ctx, ready.fill)
             val outcome = withContext(Dispatchers.Default) {
                 runCatching {
-                    val outDir = File(ctx.getExternalFilesDir(null), Transcoder.SAVE_FOLDER).apply { mkdirs() }
-                    val base = ready.info.name.substringBeforeLast('.').ifBlank { "status" }
-                        .replace(Regex("[^A-Za-z0-9._-]+"), "_").take(40)
-                    val parts = if (ready.info.isVideo) {
-                        Transcoder.transcodeVideo(ctx, ready.uri, ready.fill, outDir, base, cancelFlag::get) { p, part, total ->
-                            _state.update { s ->
-                                val w = s.screen as? Screen.Working ?: return@update s
-                                s.copy(screen = w.copy(progress = p, part = part, parts = total))
-                            }
+                    makeStatusClips(ctx, ready, cancelFlag::get) { p, part, total ->
+                        _state.update { s ->
+                            val w = s.screen as? Screen.Working ?: return@update s
+                            s.copy(screen = w.copy(progress = p, part = part, parts = total))
                         }
-                    } else {
-                        listOf(
-                            Transcoder.transcodeImage(ctx, ready.uri, ready.zoomText, ready.fill, outDir, base, cancelFlag::get) { p ->
-                                _state.update { s ->
-                                    val w = s.screen as? Screen.Working ?: return@update s
-                                    s.copy(screen = w.copy(progress = p))
-                                }
-                            }
-                        )
-                    }
-                    check(parts.isNotEmpty()) { "No clips were made." }
-                    parts.map { part ->
-                        Clip(
-                            part,
-                            runCatching { Transcoder.saveToMediaStore(ctx, part.file, part.file.name) }.getOrNull(),
-                            Transcoder.loadFileThumbnail(part.file)
-                        )
                     }
                 }
             }
@@ -183,13 +162,46 @@ class StatusViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    private fun friendly(e: Throwable, fallback: String): String {
-        val msg = e.message.orEmpty()
-        return when {
-            e is IllegalArgumentException && msg.isNotBlank() -> msg
-            msg.contains("Encoder failed", true) -> "This file couldn't be converted. Try another video or photo."
-            e is OutOfMemoryError -> "This file is too large for your phone's memory."
-            else -> fallback
-        }
+    private fun friendly(e: Throwable, fallback: String) = friendlyError(e, fallback)
+}
+
+/**
+ * The whole pipeline: encode [ready] into Status-safe clips, save each to the Gallery.
+ * Used by the app and by the quick share sheet. [onProgress] gets (0..1, part, parts).
+ */
+internal fun makeStatusClips(
+    ctx: android.content.Context,
+    ready: Screen.Ready,
+    isCancelled: () -> Boolean,
+    onProgress: (Float, Int, Int) -> Unit
+): List<Clip> {
+    val outDir = File(ctx.getExternalFilesDir(null), Transcoder.SAVE_FOLDER).apply { mkdirs() }
+    val base = ready.info.name.substringBeforeLast('.').ifBlank { "status" }
+        .replace(Regex("[^A-Za-z0-9._-]+"), "_").take(40)
+    val parts = if (ready.info.isVideo) {
+        Transcoder.transcodeVideo(ctx, ready.uri, ready.fill, outDir, base, isCancelled, onProgress)
+    } else {
+        listOf(Transcoder.transcodeImage(ctx, ready.uri, ready.zoomText, ready.fill, outDir, base, isCancelled) { p -> onProgress(p, 1, 1) })
+    }
+    check(parts.isNotEmpty()) { "No clips were made." }
+    return parts.map { part ->
+        Clip(
+            part,
+            runCatching { Transcoder.saveToMediaStore(ctx, part.file, part.file.name) }.getOrNull(),
+            Transcoder.loadFileThumbnail(part.file)
+        )
+    }
+}
+
+/** Turns a technical failure into something a person can act on. */
+internal fun friendlyError(e: Throwable, fallback: String): String {
+    val msg = e.message.orEmpty()
+    return when {
+        e is IllegalArgumentException && msg.isNotBlank() -> msg
+        msg.contains("Encoder failed", true) -> "This file couldn't be converted. Try another video or photo."
+        e is OutOfMemoryError -> "This file is too large for your phone's memory."
+        e is SecurityException || e is java.io.FileNotFoundException ->
+            "StatusClear wasn't allowed to open that file. Share it again from your Gallery."
+        else -> fallback
     }
 }

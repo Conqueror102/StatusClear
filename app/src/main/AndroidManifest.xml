@@ -29,8 +29,16 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- Lets people share a video or photo from Gallery straight into the app. -->
-            <intent-filter android:label="Make HD Status">
+        </activity>
+
+        <!-- Gallery → Share → "HD Status": a see-through sheet that prepares the
+             video/photo and hands it straight to WhatsApp, without opening the app. -->
+        <activity
+            android:name=".QuickShareActivity"
+            android:exported="true"
+            android:label="HD Status"
+            android:theme="@style/Theme.StatusClear.Sheet">
+            <intent-filter android:label="HD Status">
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="video/*" />

@@ -13,8 +13,8 @@ android {
         applicationId = "com.conqueror102.statusclear"
         minSdk = 26
         targetSdk = 37
-        versionCode = 4
-        versionName = "1.3"
+        versionCode = 5
+        versionName = "1.4"
     }
 
     // FFmpeg + x264 native code is ~30 MB per CPU type, so build one APK per type:
