@@ -24,12 +24,16 @@ Measured on a real phone with labelled test clips (November 2026): WhatsApp Stat
 - Long videos are split into 30-second Status clips, in order. 60 fps becomes 30 fps; HDR is converted to normal colours.
 - Photos and screenshots become a sharp 5-second Status clip, with optional "Zoom into text".
 
-## How to post an HD WhatsApp Status
+## How to post an HD WhatsApp Status (3 taps, v1.4+)
 
 1. Install StatusClear from https://statusclear.hub2.workers.dev
-2. Pick a video or photo and tap "Make HD Status".
-3. Tap "Share to WhatsApp" and choose "My status".
+2. In your Gallery, tap Share on a video or photo and choose "HD Status". StatusClear prepares it in a small sheet (the app doesn't even open) and then opens WhatsApp by itself.
+3. Choose "My status" and send.
 4. Don't trim, crop or add text inside WhatsApp afterwards: any edit makes WhatsApp re-encode it.
+
+Alternatively, open the StatusClear app for more options (fit or fill wide pictures, zoom into text), then tap "Make HD Status" and "Share to WhatsApp".
+
+Demo video (real phone recording): https://statusclear.hub2.workers.dev/img/quick-share.mp4
 
 ## Links
 

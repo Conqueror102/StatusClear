@@ -55,9 +55,15 @@ Measured on a real phone with labelled test clips (Nov 2026):
 
 ## How to post
 
-1. Pick a video or photo in StatusClear and tap **Make HD Status**.
-2. Tap **Share to WhatsApp** and choose **My status**.
+**Quickest (v1.4+): three taps from your Gallery.**
+
+1. In your Gallery, tap **Share** on a video or photo and choose **HD Status**.
+   A small sheet prepares it; StatusClear itself doesn't even open.
+2. WhatsApp opens by itself: choose **My status** and send.
 3. Don't trim or edit it inside WhatsApp — editing makes WhatsApp re-encode it.
+
+**With more options:** open StatusClear, pick a video or photo (choose *Whole picture*
+or *Fill screen*, or *Zoom into text*), tap **Make HD Status**, then **Share to WhatsApp**.
 
 ## Build from source
 

@@ -62,7 +62,7 @@
       "applicationCategory": "MultimediaApplication",
       "applicationSubCategory": "Video editor",
       "operatingSystem": "Android 8.0 or newer",
-      "softwareVersion": "1.3",
+      "softwareVersion": "1.4",
       "fileSize": "35MB",
       "downloadUrl": "https://github.com/Conqueror102/StatusClear/releases/latest/download/StatusClear-arm64-v8a.apk",
       "installUrl": "https://statusclear.hub2.workers.dev/#install",
@@ -71,6 +71,7 @@
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
       "featureList": [
         "Posts WhatsApp Status videos and photos in full HD 1080×1920",
+        "Share straight from your Gallery: Share, HD Status, My status. No need to open the app",
         "Keeps every clip under WhatsApp Status's ~1.4 Mbps limit and checks it before sharing",
         "Splits long videos into 30-second Status clips in order",
         "Turns photos and screenshots into a sharp 5-second Status",
@@ -89,6 +90,17 @@
       "sameAs": ["https://github.com/Conqueror102/StatusClear"]
     },
     {
+      "@type": "VideoObject",
+      "@id": "https://statusclear.hub2.workers.dev/#quick-share-video",
+      "name": "Post an HD WhatsApp Status in three taps with StatusClear",
+      "description": "Real screen recording: a video is shared from the Gallery to HD Status, StatusClear prepares it in full HD, then WhatsApp opens and it is posted to My status.",
+      "thumbnailUrl": "https://statusclear.hub2.workers.dev/img/quick-share.jpg",
+      "contentUrl": "https://statusclear.hub2.workers.dev/img/quick-share.mp4",
+      "uploadDate": "2026-11-27",
+      "duration": "PT19S",
+      "creator": { "@id": "https://statusclear.hub2.workers.dev/#creator" }
+    },
+    {
       "@type": "FAQPage",
       "@id": "https://statusclear.hub2.workers.dev/#faq",
       "mainEntity": [
@@ -100,7 +112,7 @@
         {
           "@type": "Question",
           "name": "How do I post a WhatsApp Status in HD without losing quality?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Install StatusClear (free, Android). Pick your video or photo, tap Make HD Status, then tap Share to WhatsApp and choose My status. Don't trim, crop or add text inside WhatsApp afterwards, because any edit makes WhatsApp re-encode it." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Install StatusClear (free, Android). In your Gallery, tap Share on the video or photo and choose HD Status. StatusClear prepares it in full HD and opens WhatsApp by itself: choose My status and send. Don't trim, crop or add text inside WhatsApp afterwards, because any edit makes WhatsApp re-encode it." }
         },
         {
           "@type": "Question",
@@ -324,6 +336,25 @@
   details[open] summary .plus { transform: rotate(45deg); }
   details p { margin: 0 0 22px; color: var(--body); max-width: 760px; }
 
+  /* ---------- hero "new" line ---------- */
+  .new-line { display: inline-flex; align-items: center; gap: 10px; font-size: 15px; color: var(--body); margin-top: -6px; }
+  .new-line:hover { color: var(--ink); }
+  .pill-new { background: var(--ink); color: #fff; font-weight: 600; font-size: 12px; letter-spacing: .02em; padding: 4px 9px; border-radius: 999px; }
+
+  /* ---------- quick share ---------- */
+  .qs { display: grid; grid-template-columns: .8fr 1.2fr; gap: 70px; align-items: center; }
+  .qs-media { position: relative; display: grid; justify-items: center; }
+  .qs-phone { width: 300px; border-radius: 38px; overflow: hidden; background: #000; border: 8px solid #12161c; box-shadow: 0 40px 80px -24px rgba(11,15,14,.45), 0 12px 24px rgba(11,15,14,.12); aspect-ratio: 540 / 1200; }
+  .qs-phone video { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .qs-chip { margin-top: 16px; font-size: 13px; color: var(--muted); }
+  .qs-steps { list-style: none; padding: 0; margin: 30px 0 0; display: grid; gap: 12px; counter-reset: q; }
+  .qs-steps li { display: grid; grid-template-columns: 34px 1fr; gap: 2px 14px; background: var(--soft); border-radius: 22px; padding: 18px 20px; }
+  .qs-steps li::before { counter-increment: q; content: counter(q); grid-row: span 2; width: 34px; height: 34px; border-radius: 50%; background: var(--green); color: var(--green-ink); display: grid; place-items: center; font: 600 15px/1 var(--display); }
+  .qs-steps b { font: 600 18px/1.3 var(--display); letter-spacing: -.01em; padding-top: 5px; }
+  .qs-steps span { color: var(--body); font-size: 15px; }
+  .qs-note { margin: 18px 0 0; font-size: 14px; color: var(--muted); }
+  .qs-note b { color: var(--body); }
+
   /* ---------- free alternative ---------- */
   .alt { display: grid; grid-template-columns: .95fr 1.05fr; gap: 60px; align-items: center; }
   .alt h2 em { font-style: normal; background: var(--green); color: var(--green-ink); border-radius: 14px; padding: 0 .16em .04em; }
@@ -369,7 +400,7 @@
   @media (max-width: 1080px) {
     .bento { grid-template-columns: 1fr 1fr; }
     .tile-dark { grid-column: span 2; grid-row: auto; }
-    .chart-layout, .warn-head, .alt { grid-template-columns: 1fr; gap: 36px; }
+    .chart-layout, .warn-head, .alt, .qs { grid-template-columns: 1fr; gap: 36px; }
     .flow { grid-template-columns: repeat(2, 1fr); gap: 30px 20px; }
     .trust { grid-template-columns: repeat(2, 1fr); }
     .float { display: none; }
@@ -404,6 +435,9 @@
     .trust { grid-template-columns: 1fr; gap: 12px; margin-top: 44px; }
     .btn { height: 52px; }
     .hero-ctas .btn { width: 100%; }
+    .new-line { font-size: 14px; text-align: left; }
+    .qs-phone { width: 240px; border-radius: 30px; border-width: 6px; }
+    .qs-steps li { padding: 16px; border-radius: 18px; }
     details { padding: 0 18px; border-radius: 18px; }
     summary { font-size: 16px; padding: 18px 0; }
     .bar-row { grid-template-columns: 40px 1fr; }
@@ -453,6 +487,7 @@
         </a>
         <a class="btn btn-light" href="#install">Is it safe to install?</a>
       </div>
+      <a class="new-line" href="#quick"><span class="pill-new">New</span>Share from your Gallery &rarr; HD Status. That's it.</a>
       <div class="proof">
         <span class="dl-count"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg><b class="tnum" data-downloads>—</b>&nbsp;<span data-downloads-word>downloads</span></span>
         <span class="sep"></span><span><b data-version>Latest</b> version</span>
@@ -501,8 +536,8 @@
           <div class="num tnum">0</div>
         </div>
         <div class="tile tile-soft reveal">
-          <p class="label">Long videos split into Status-length clips, in order</p>
-          <div class="num tnum">30<span class="sym">s</span></div>
+          <p class="label">From your Gallery to your Status: Share, HD Status, My status</p>
+          <div class="num tnum">3<span class="sym"> taps</span></div>
         </div>
       </div>
     </div>
@@ -525,6 +560,32 @@
               <span><i style="background:var(--rose)"></i>Crushed to 360×640</span>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK SHARE (v1.4) -->
+  <section id="quick" aria-labelledby="quick-title">
+    <div class="wrap">
+      <div class="qs">
+        <div class="qs-media reveal">
+          <div class="qs-phone">
+            <video src="img/quick-share.mp4" poster="img/quick-share.jpg" muted loop playsinline preload="none" width="540" height="1200"
+              aria-label="Screen recording: a video is shared from Gallery to HD Status, StatusClear prepares it, then WhatsApp opens and it is posted to My status"></video>
+          </div>
+          <span class="qs-chip">Real phone recording</span>
+        </div>
+        <div class="reveal">
+          <span class="badge"><span class="dot"></span>New in v1.4</span>
+          <h2 id="quick-title" style="margin-top:22px">Three taps from<br>your Gallery.</h2>
+          <p class="lead" style="margin:20px 0 0">You don't even have to open StatusClear. Share a video or photo the way you always do, and it quietly makes it HD and hands it straight to WhatsApp.</p>
+          <ol class="qs-steps">
+            <li><b>Share</b><span>From your Gallery, or any app that has a Share button.</span></li>
+            <li><b>Tap &ldquo;HD Status&rdquo;</b><span>A small sheet shows the progress. WhatsApp opens by itself when it's ready.</span></li>
+            <li><b>Choose My status &rarr; Send</b><span>Posted in full HD. A copy is saved to your Gallery too.</span></li>
+          </ol>
+          <p class="qs-note">Want to fit or fill a wide picture, or zoom into small text? Tap <b>More options</b> on the sheet, or open the app.</p>
         </div>
       </div>
     </div>
@@ -655,7 +716,7 @@
       </div>
       <div class="faq">
         <details><summary>Why is my WhatsApp Status blurry?<span class="plus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>WhatsApp re-encodes any Status whose average bitrate is above about 1.4 Mbps, and when it does, it shrinks it to 360×640. Videos straight from a phone camera are usually far above that, so almost every clip gets crushed. StatusClear re-encodes your clip to full HD 1080×1920 under 1.3 Mbps on your phone, so WhatsApp posts it untouched.</p></details>
-        <details><summary>How do I post a WhatsApp Status in HD without losing quality?<span class="plus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>Install StatusClear (free, Android). Pick your video or photo, tap Make HD Status, then tap Share to WhatsApp and choose My status. Don't trim, crop or add text inside WhatsApp afterwards, because any edit makes WhatsApp re-encode it.</p></details>
+        <details><summary>How do I post a WhatsApp Status in HD without losing quality?<span class="plus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>Install StatusClear (free, Android). In your Gallery, tap Share on the video or photo and choose HD Status. StatusClear prepares it in full HD and opens WhatsApp by itself: choose My status and send. Don't trim, crop or add text inside WhatsApp afterwards, because any edit makes WhatsApp re-encode it.</p></details>
         <details><summary>Is there a free alternative to PureStatus?<span class="plus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>Yes. StatusClear does the same job of keeping WhatsApp Status videos and photos sharp, and it is completely free: no ads, no in-app purchases, no account and no watermark. It is open source and works offline on Android 8.0 or newer. StatusClear is an independent project and is not affiliated with PureStatus.</p></details>
         <details><summary>Is StatusClear really free? Does it have ads?<span class="plus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>Yes, it is free, and there are no ads, no subscription, no in-app purchases and no account. It is open source under the GPL-3.0 license.</p></details>
         <details><summary>Is StatusClear safe?<span class="plus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary><p>StatusClear asks Android for no permissions at all, not even internet access, so it cannot upload your files. Its full source code is public on GitHub, every release is signed with the same developer key, and Google Play Protect scans it during install.</p></details>
@@ -757,6 +818,20 @@
   } else {
     document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
   }
+
+  // ---- Quick share demo: play only while visible; reduced motion gets a poster + controls ----
+  (function () {
+    var v = document.querySelector('#quick video');
+    if (!v) return;
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (still || !('IntersectionObserver' in window)) { v.controls = true; v.preload = 'metadata'; return; }
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { v.preload = 'auto'; var p = v.play(); if (p && p.catch) p.catch(function () { v.controls = true; }); }
+        else v.pause();
+      });
+    }, { threshold: 0.35 }).observe(v);
+  })();
 
   // ---- Live numbers from GitHub (best effort; the page works without them) ----
   var fmt = new Intl.NumberFormat('en');
